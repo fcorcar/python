@@ -89,7 +89,7 @@ def crear_secuencia(): #Crea la secuencia que muestra al usuario
     numero_ejecuciones_secuencia_usuario = numero_ejecuciones_secuencia_cpu #Obtiene el numero de caracteres de la secuencia_cpu para saber cuando iniciar la siguiente
     posicion_actual_secuencia_usuario = 0 #Inicia en 0 para comparar los inputs de usuario
     
-    etiqueta.config(text=f"PUNTOS: {puntos}") #Refresca los puntos cuando se inicia la siguiente secuencia
+    etiqueta.config(text=f"Nivel: {puntos}") #Refresca los puntos cuando se inicia la siguiente secuencia
 
     activar_desactivar_boton(False) #Desactiva los botones mientras la secuencia se esta mostrando
     
@@ -108,7 +108,7 @@ def boton_pulsado(valor):
             crear_secuencia()
     
     else: #Si pierdes se desactivan los botones
-        etiqueta.config(text="HAS PERDIDO")
+        etiqueta.config(text=f"¡Has perdido!  Nivel alcanzado: {puntos}")
         activar_desactivar_boton(False)
 
         boton_comenzar.config(state=tk.NORMAL)
@@ -146,7 +146,7 @@ frame1 = tk.Frame(ventana)
 frame1.config(width=705, height=80, bg="cyan3")
 frame1.place(x=25, y=25)
 
-etiqueta = tk.Label(frame1, text="PUNTOS: 0")
+etiqueta = tk.Label(frame1, text="Nivel: 0")
 etiqueta.config(fg="black", bg="cyan3", font=("Arial", 21, "bold"))
 etiqueta.place(x=15, y=22)
 
