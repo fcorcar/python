@@ -5,6 +5,7 @@ import tkinter as tk
 import random
 import time
 import threading
+import pygame
 
 
 #VARIABLES
@@ -18,6 +19,14 @@ numero_ejecuciones_secuencia_usuario = 0
 posicion_actual_secuencia_usuario = 0
 
 puntos = 0
+
+pygame.mixer.init()
+sonido_1 = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/do.mp3")
+sonido_2 = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/re.mp3")
+sonido_3 = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/mi.mp3")
+sonido_4 = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/fa.mp3")
+sonido_win = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/win.mp3")
+sonido_game_over = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/gameover.mp3")
 
 
 #FUNCIONES
@@ -62,15 +71,19 @@ def cambiar_color(boton, color): #Cambia el color
 def mostrar_secuencia(): #Inicia la secuencia_cpu
     if boton_actual == "1":
         cambiar_color(boton_azul, "white")
+        sonido_1.play()
     
     elif boton_actual == "2":
         cambiar_color(boton_rojo, "white")
+        sonido_2.play()
 
     elif boton_actual == "3":
         cambiar_color(boton_verde, "white")
+        sonido_3.play()
 
     elif boton_actual == "4":
         cambiar_color(boton_amarillo, "white")
+        sonido_4.play()
     
 
     t = threading.Timer(0.5, restaurar_color)
@@ -93,22 +106,38 @@ def crear_secuencia(): #Crea la secuencia que muestra al usuario
 
     activar_desactivar_boton(False) #Desactiva los botones mientras la secuencia se esta mostrando
     
-    mostrar_secuencia()
+    m = threading.Timer(1, mostrar_secuencia)
+    m.start()
         
         
 def boton_pulsado(valor):
     global posicion_actual_secuencia_usuario, numero_ejecuciones_secuencia_usuario, puntos, secuencia_cpu
+
+    if valor == "1":
+        sonido_1.play()
+    
+    elif valor == "2":
+        sonido_2.play()
+
+    elif valor == "3":
+        sonido_3.play()
+
+    elif valor == "4":
+        sonido_4.play()
 
     if secuencia_cpu[posicion_actual_secuencia_usuario] == valor: #Si el boton que ha sido pulsado corresponde con el actual de la secuencia_cpu, ganas
         posicion_actual_secuencia_usuario += 1
         numero_ejecuciones_secuencia_usuario -= 1
 
         if numero_ejecuciones_secuencia_usuario == 0: #Si el numero de ejecuciones llega a 0 significa que la secuencia ha sido completada exitosamente, y pasa a la siguiente
-            puntos += 1      
+            puntos += 1 
+            time.sleep(0.3)
+            sonido_win.play()     
             crear_secuencia()
     
     else: #Si pierdes se desactivan los botones
         etiqueta.config(text=f"¡Has perdido!  Nivel alcanzado: {puntos}")
+        sonido_game_over.play() 
         activar_desactivar_boton(False)
 
         boton_comenzar.config(state=tk.NORMAL)
