@@ -21,12 +21,12 @@ posicion_actual_secuencia_usuario = 0
 puntos = 0
 
 pygame.mixer.init()
-sonido_1 = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/do.mp3")
-sonido_2 = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/re.mp3")
-sonido_3 = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/mi.mp3")
-sonido_4 = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/fa.mp3")
-sonido_win = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/win.mp3")
-sonido_game_over = pygame.mixer.Sound("proyecto-2-juego-de-memoria/sounds/gameover.mp3")
+sonido_1 = pygame.mixer.Sound("sounds/do.mp3")
+sonido_2 = pygame.mixer.Sound("sounds/re.mp3")
+sonido_3 = pygame.mixer.Sound("sounds/mi.mp3")
+sonido_4 = pygame.mixer.Sound("sounds/fa.mp3")
+sonido_win = pygame.mixer.Sound("sounds/win.mp3")
+sonido_game_over = pygame.mixer.Sound("sounds/gameover.mp3")
 
 
 #FUNCIONES
