@@ -136,6 +136,11 @@ frame0 = tk.Frame(ventana, highlightthickness=3)
 frame0.config(bg="gray85", highlightbackground = "gray63")
 frame0.place(x=22, y=22, width=852, height=280)
 
+copy = tk.Label(ventana, text="©️ 2024 - Fcorcar")
+copy.config(fg="black", bg="gray63", justify="right", font=("Arial", 8))
+copy.place(x=805, y=304)
+
+
 # Frame 1 
 frame1 = tk.Frame(ventana)
 frame1.config(bg="gray85")
