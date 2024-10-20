@@ -1,6 +1,8 @@
 import tkinter as tk
 import random
 
+has_perdido = False
+
 #Ventana
 ancho_ventana = 1500
 alto_ventana = 800
@@ -14,10 +16,37 @@ root.geometry(resolucion_ventana)
 root.resizable(False, False)
 
 
+ancho_casa = ancho_ventana // 5
+alto_casa = alto_ventana // 2
+
+posX_casa_izq = 0
+posY_casa_izq = alto_ventana // 2 - alto_casa // 2
+
+posX_casa_der = ancho_ventana - ancho_casa
+posY_casa_der = alto_ventana // 2 - alto_casa // 2
+
+muro_izq = tk.Frame(root)
+muro_izq.config(bg="black")
+muro_izq.place(x=posX_casa_izq, y=0, width=ancho_casa, height=alto_ventana)
+
+casa_izq = tk.Frame(root)
+casa_izq.config(bg="#ff8a8a", highlightthickness=4, highlightbackground = "red")
+casa_izq.place(x=posX_casa_izq, y=posY_casa_izq, width=ancho_casa, height=alto_casa)
+
+muro_der = tk.Frame(root)
+muro_der.config(bg="black")
+muro_der.place(x=posX_casa_der, y=0, width=ancho_casa, height=alto_ventana)
+
+casa_der = tk.Frame(root)
+casa_der.config(bg="#8ad6ff", highlightthickness=4, highlightbackground = "blue")
+casa_der.place(x=posX_casa_der, y=posY_casa_der, width=ancho_casa, height=alto_casa)
+
+
 class Enemigo():
-    ancho_enemigo = 45
-    alto_enemigo = 45
+    ancho_enemigo = 50
+    alto_enemigo = 50
     arrastrando_enemigo = False
+    tiempo_explosion = 10
     
     def __init__(self, posX_inicial_enemigo, posY_inicial_enemigo, direccion_enemigo_x, direccion_enemigo_y, velocidad_enemigo):
         self.posX_inicial_enemigo = posX_inicial_enemigo
@@ -26,16 +55,19 @@ class Enemigo():
         self.direccion_enemigo_y = direccion_enemigo_y
         self.velocidad_enemigo = velocidad_enemigo
         self.color = random.choice(["blue", "red"])
+        self.enemigo_eliminado = False
+
+        self.contador_explosion()
     
 
     def crear_enemigo(self):
         self.enemigo = tk.Frame(root)
         self.enemigo.config(bg=self.color)
         self.enemigo.place(x=self.posX_inicial_enemigo, y=self.posY_inicial_enemigo, width=self.ancho_enemigo, height=self.alto_enemigo)
-        
+
         self.enemigo.bind("<Button-1>", self.posicion_raton_clic)
         self.enemigo.bind('<B1-Motion>', self.arrastrar_enemigo)
-        self.enemigo.bind('<ButtonRelease>', self.enemigo_presionado)
+        self.enemigo.bind('<ButtonRelease>', self.enemigo_soltado)
 
 
     def posicion_raton_clic(self, event):
@@ -70,8 +102,27 @@ class Enemigo():
         self.arrastrando_enemigo = True
     
 
-    def enemigo_presionado(self, event):
+    def enemigo_soltado(self, event):
+        global has_perdido
         self.arrastrando_enemigo = False
+
+        #Soltado a la izquierda
+        if self.enemigo.winfo_x() >= 0 and self.enemigo.winfo_x() <= ancho_casa - self.ancho_enemigo and self.enemigo.winfo_y() >= posY_casa_izq and self.enemigo.winfo_y() <= posY_casa_izq + alto_casa - self.alto_enemigo:
+            
+            if self.color == "red":
+                self.eliminar_enemigo()
+            else:
+                print("HAS PERDIDO!!!")
+                has_perdido = True
+
+        #Soltado a la derecha
+        elif self.enemigo.winfo_x() >= posX_casa_der and self.enemigo.winfo_x() <= ancho_ventana - self.ancho_enemigo and self.enemigo.winfo_y() >= posY_casa_der and self.enemigo.winfo_y() <= posY_casa_der + alto_casa - self.alto_enemigo:
+            if self.color == "blue":
+                self.eliminar_enemigo()
+            else:
+                print("HAS PERDIDO!!!")
+                has_perdido = True
+
 
     def movimiento_enemigo(self):
         #Mueve al enemigo siempre que el jugador no lo este arrastrando
@@ -79,11 +130,11 @@ class Enemigo():
             self.enemigo.place(x=self.enemigo.winfo_x() + self.direccion_enemigo_x, y=self.enemigo.winfo_y() + self.direccion_enemigo_y * self.velocidad_enemigo)
 
         #Cambia la direccion al chocar a la IZQUIERDA
-        if self.enemigo.winfo_x() < 0:
+        if self.enemigo.winfo_x() < ancho_casa:
             self.direccion_enemigo_x = 1
 
         #Cambia la direccion al chocar a la DERECHA
-        elif self.enemigo.winfo_x() > ancho_ventana - self.ancho_enemigo:
+        elif self.enemigo.winfo_x() > ancho_ventana - self.ancho_enemigo - ancho_casa:
             self.direccion_enemigo_x = -1
             
 
@@ -95,36 +146,96 @@ class Enemigo():
         elif self.enemigo.winfo_y() > alto_ventana - self.alto_enemigo:
             self.direccion_enemigo_y = -1
 
+    def eliminar_enemigo(self):
+        self.enemigo_eliminado = True
+        self.enemigo.destroy()
+        lista_enemigos.remove(self)
 
 
+    def contador_explosion(self):
+        global has_perdido
+
+        self.tiempo_explosion -= 1
+
+        if self.tiempo_explosion == 5:
+            self.animacion()
+
+        if self.tiempo_explosion <= 0:
+            print("HAS PERDIDO!!!")
+            has_perdido = True
+        
+        if not has_perdido and not self.enemigo_eliminado:
+            root.after(1000, self.contador_explosion)
+
+    
+    def animacion(self):
+        if not self.enemigo_eliminado and not has_perdido:
+            if self.enemigo.cget('bg') == self.color:
+                self.enemigo.config(bg="white")
+            
+            else:
+                self.enemigo.config(bg=self.color)
+
+            root.after(500, self.animacion)
+
+
+
+
+
+
+
+
+
+
+lista_enemigos = []
 tiempo_spawn = 200
 relog = tiempo_spawn
+spawn_anterior = direccion_anterior = None
 
 class CrearEnemigo():
-    lista_enemigos = []
-   
+    
     def crear_enemigos(self):
+        global spawn_anterior, direccion_anterior
         cambiar_spawn = random.choice([True, False])
         direccion_x = random.choice([-1,1])
 
+        if cambiar_spawn == spawn_anterior and direccion_x == direccion_anterior:
+            if direccion_x == -1:
+                direccion_x = 1
+            else:
+                direccion_x = -1
+
+        spawn_anterior = cambiar_spawn
+        direccion_anterior = direccion_x
+
         if cambiar_spawn:
-            self.lista_enemigos.append(Enemigo(ancho_ventana // 2 - Enemigo.ancho_enemigo // 2, 0, direccion_x, 1, 1.5))
+            lista_enemigos.append(Enemigo(ancho_ventana // 2 - Enemigo.ancho_enemigo // 2, 0, direccion_x, 1, 1.5))
 
         else:
-            self.lista_enemigos.append(Enemigo(ancho_ventana // 2 - Enemigo.ancho_enemigo // 2, alto_ventana - Enemigo.alto_enemigo, direccion_x, -1, 1.5))
+            lista_enemigos.append(Enemigo(ancho_ventana // 2 - Enemigo.ancho_enemigo // 2, alto_ventana - Enemigo.alto_enemigo, direccion_x, -1, 1.5))
 
-        self.lista_enemigos[-1].crear_enemigo()
+        lista_enemigos[-1].crear_enemigo()
 
     def actualizar_movimientos_enemigos(self):
-        for i in self.lista_enemigos:
+        for i in lista_enemigos:
             i.movimiento_enemigo()
 
-    def spawn_enemigo(self, tiempo_spawn):
-        global relog
+    def spawn_enemigo(self, t_spawn):
+        global relog, tiempo_spawn
         relog -= 1
+        
         if relog <= 0:
-            relog = tiempo_spawn
-            self.crear_enemigos()
+            relog = t_spawn
+            if tiempo_spawn <= 180: ##MOD
+                self.crear_enemigos()
+                self.crear_enemigos()
+            else:
+                self.crear_enemigos()
+            
+            if tiempo_spawn >= 140:
+                tiempo_spawn -= 2
+
+            print(tiempo_spawn)
 
 
 
@@ -133,8 +244,9 @@ class CrearEnemigo():
 
 #Acualizar movimientos
 def update():
-    CrearEnemigo().actualizar_movimientos_enemigos()
-    CrearEnemigo().spawn_enemigo(tiempo_spawn)  
+    if not has_perdido:
+        CrearEnemigo().actualizar_movimientos_enemigos()
+        CrearEnemigo().spawn_enemigo(tiempo_spawn)  
 
     root.after(10, update)
 
