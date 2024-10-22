@@ -2,6 +2,7 @@ import tkinter as tk
 import random
 
 has_perdido = False
+puntos = 0
 
 #Ventana
 ancho_ventana = 1500
@@ -14,6 +15,7 @@ y_ventana = root.winfo_screenheight() // 2 - alto_ventana // 2
 resolucion_ventana = f"{ancho_ventana}x{alto_ventana}+{x_ventana}+{y_ventana}"
 root.geometry(resolucion_ventana)
 root.resizable(False, False)
+root.config(bg="gray32")
 
 
 ancho_casa = ancho_ventana // 5
@@ -25,26 +27,21 @@ posY_casa_izq = alto_ventana // 2 - alto_casa // 2
 posX_casa_der = ancho_ventana - ancho_casa
 posY_casa_der = alto_ventana // 2 - alto_casa // 2
 
-muro_izq = tk.Frame(root)
-muro_izq.config(bg="black")
-muro_izq.place(x=posX_casa_izq, y=0, width=ancho_casa, height=alto_ventana)
-
 casa_izq = tk.Frame(root)
 casa_izq.config(bg="#ff8a8a", highlightthickness=4, highlightbackground = "red")
 casa_izq.place(x=posX_casa_izq, y=posY_casa_izq, width=ancho_casa, height=alto_casa)
-
-muro_der = tk.Frame(root)
-muro_der.config(bg="black")
-muro_der.place(x=posX_casa_der, y=0, width=ancho_casa, height=alto_ventana)
 
 casa_der = tk.Frame(root)
 casa_der.config(bg="#8ad6ff", highlightthickness=4, highlightbackground = "blue")
 casa_der.place(x=posX_casa_der, y=posY_casa_der, width=ancho_casa, height=alto_casa)
 
+etiqueta_puntos = tk.Label(root, text="PUNTOS: 0")
+etiqueta_puntos.config(bg="gray32", fg="white", font=("Arial", 22, "bold"))
+etiqueta_puntos.place(x=10, y=10)
 
 class Enemigo():
-    ancho_enemigo = 50
-    alto_enemigo = 50
+    ancho_enemigo = 55
+    alto_enemigo = 55
     arrastrando_enemigo = False
     tiempo_explosion = 10
     
@@ -103,7 +100,7 @@ class Enemigo():
     
 
     def enemigo_soltado(self, event):
-        global has_perdido
+        global has_perdido, puntos
         self.arrastrando_enemigo = False
 
         #Soltado a la izquierda
@@ -111,6 +108,8 @@ class Enemigo():
             
             if self.color == "red":
                 self.eliminar_enemigo()
+                puntos += 1
+                etiqueta_puntos.config(text=f"PUNTOS: {puntos}")
             else:
                 print("HAS PERDIDO!!!")
                 has_perdido = True
@@ -119,6 +118,8 @@ class Enemigo():
         elif self.enemigo.winfo_x() >= posX_casa_der and self.enemigo.winfo_x() <= ancho_ventana - self.ancho_enemigo and self.enemigo.winfo_y() >= posY_casa_der and self.enemigo.winfo_y() <= posY_casa_der + alto_casa - self.alto_enemigo:
             if self.color == "blue":
                 self.eliminar_enemigo()
+                puntos += 1
+                etiqueta_puntos.config(text=f"PUNTOS: {puntos}")
             else:
                 print("HAS PERDIDO!!!")
                 has_perdido = True
