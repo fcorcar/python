@@ -14,7 +14,6 @@ pygame.display.set_caption("TANKE LOCO")
 jugador.crear_jugador()
 
 
-
 while True:
 
     #JUEGO
@@ -24,6 +23,9 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+    
+    if pygame.key.get_pressed()[pygame.K_ESCAPE]:
+        sys.exit()
 
     ventana.fill(constantes.COLOR_VENTANA)
 

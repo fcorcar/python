@@ -1,4 +1,4 @@
-import pygame, constantes, sys, acciones
+import pygame, constantes, acciones
 
 class Jugador():
     def __init__(self, x, y):
