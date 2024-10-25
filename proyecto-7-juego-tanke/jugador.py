@@ -7,9 +7,10 @@ class Jugador():
         self.ancho = constantes.ANCHO_JUGADOR
         self.alto = constantes.ALTO_JUGADOR
         self.color = constantes.COLOR_JUGADOR
-        self.velocidad = 15
+        self.velocidad = 18
         self.rect = pygame.Rect(self.x, self.y, self.ancho, self.alto)
         self.vidas = 3
+        self.vida_ciudad = 100
         self.puntos = 0
 
     def dibujar(self, ventana):
@@ -36,6 +37,10 @@ class Jugador():
     
     def sumar_puntos(self, p_suma):
         self.puntos += p_suma
+
+    def restar_vida_ciudad(self, v_resta):
+        self.vida_ciudad -= v_resta
+        if self.vida_ciudad == 0: acciones.has_perdido()
         
 
 

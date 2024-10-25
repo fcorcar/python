@@ -65,3 +65,5 @@ def comprobar_posicion_enemigos():
 
             if jugador.lista_jugadores[0].puntos > 1:
                 jugador.lista_jugadores[0].sumar_puntos(-2)
+
+            jugador.lista_jugadores[0].restar_vida_ciudad(2)

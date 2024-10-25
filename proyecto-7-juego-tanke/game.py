@@ -48,8 +48,11 @@ while True:
     texto_vidas = constantes.FUENTE.render(f"Vidas: {jugador.lista_jugadores[0].vidas}", True, "black")
     ventana.blit(texto_vidas, (20, 20))
 
+    texto_ciudad = constantes.FUENTE.render(f"Ciudad: {jugador.lista_jugadores[0].vida_ciudad}%", True, "black")
+    ventana.blit(texto_ciudad, (140, 20))
+
     texto_puntos = constantes.FUENTE.render(f"Puntos: {jugador.lista_jugadores[0].puntos}", True, "black")
-    ventana.blit(texto_puntos, (140, 20))
+    ventana.blit(texto_puntos, (330, 20))
 
     texto_municion = constantes.FUENTE.render(f"Munición: {bala.cantidad_municion}", True, "black")
     ventana.blit(texto_municion, (constantes.RESOLUCION_VENTANA_ACTUAL[0] - 175, 20))
