@@ -3,7 +3,7 @@ import pygame, sys, constantes, enemigo, jugador, bala
 pygame.init()
 
 #JUEGO
-relog = pygame.time.Clock()
+reloj = pygame.time.Clock()
 
 #VENTANA
 ventana = pygame.display.set_mode(constantes.TAMANO_VENTANA)
@@ -17,7 +17,7 @@ jugador.crear_jugador()
 while True:
 
     #JUEGO
-    relog.tick(constantes.FPS)
+    reloj.tick(constantes.FPS)
 
     #VENTANA
     for event in pygame.event.get():
