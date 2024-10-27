@@ -14,7 +14,7 @@ FUENTE = pygame.font.SysFont("Arial", 24, "bold")
 
 #JUGADOR
 ANCHO_JUGADOR = 251
-ALTO_JUGADOR = 50
+ALTO_JUGADOR = 90
 COLOR_JUGADOR = (26, 106, 23)
 
 #ENEMIGO
